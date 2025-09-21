@@ -4,7 +4,7 @@
 
 ### 1) 请求地址
 
->https://ip.527188.xyz
+>https://ip.527188.xyz/api
 
 ### 2) 调用方式：HTTP get
 
