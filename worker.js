@@ -142,12 +142,12 @@ const HTML_CONTENT = `
         .header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 2rem 0;
+            padding: 1rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
             /* 确保有足够的padding避免文字被遮挡 */
-            padding-bottom: 3rem;
+            padding-bottom: 1rem;
         }
         
         .header::before {
@@ -166,7 +166,7 @@ const HTML_CONTENT = `
         .header-content {
             position: relative;
             z-index: 10; /* 提高文字内容的层级 */
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 0 1rem;
         }
@@ -214,6 +214,7 @@ const HTML_CONTENT = `
             }
         }
         .container {
+            transform: translateY(50px); /* 下移 10px */
             width: 90%;
             max-width: 1000px;
             margin: -50px auto 2rem;
@@ -236,7 +237,8 @@ const HTML_CONTENT = `
         }
         
         .card-header {
-            padding: 1.5rem;
+            transform: translateY(10px); /* 下移 10px */
+            padding: 0.6rem;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-between;
@@ -329,7 +331,7 @@ const HTML_CONTENT = `
         .map-placeholder {
             background-color: rgba(67, 97, 238, 0.05);
             border-radius: var(--border-radius);
-            height: 300px;
+            height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -403,9 +405,7 @@ const HTML_CONTENT = `
             padding: 5px;
             position: absolute;
             z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(5px); /* 往右移动 20px */
             opacity: 0;
             transition: opacity 0.3s;
             font-size: 0.8rem;
@@ -673,32 +673,62 @@ const HTML_CONTENT = `
                     }, 500);
                 });
             });
-            
-            // 深色模式切换
+
             const darkModeToggle = document.getElementById('darkModeToggle');
-            const body = document.body;
-            const icon = darkModeToggle.querySelector('i');
-            
-            // 检查本地存储中的主题设置
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                body.classList.add('dark-mode');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-            
-            darkModeToggle.addEventListener('click', function() {
-                body.classList.toggle('dark-mode');
-                
-                if (body.classList.contains('dark-mode')) {
-                    localStorage.setItem('darkMode', 'enabled');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                } else {
-                    localStorage.setItem('darkMode', null);
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                }
-            });
+const body = document.body;
+const icon = darkModeToggle.querySelector('i');
+
+// 获取系统暗色模式偏好
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// 检查用户本地存储设置
+const userPref = localStorage.getItem('darkMode');
+
+// 页面加载时设置初始模式
+if (userPref === 'enabled') {
+    body.classList.add('dark-mode');
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+} else if (userPref === 'disabled') {
+    body.classList.remove('dark-mode');
+    icon.classList.remove('fa-sun');
+    icon.classList.add('fa-moon');
+} else if (systemPrefersDark) {
+    body.classList.add('dark-mode');
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+}
+
+// 切换按钮事件
+darkModeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        localStorage.setItem('darkMode', 'disabled');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+});
+
+// 可选：监听系统模式变化（仅在用户未手动选择时）
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('darkMode')) { // 用户未手动设置时才跟随
+        if (e.matches) {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            body.classList.remove('dark-mode');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    }
+});
+
             
             // 添加复制功能
             setupCopyFunctionality();
