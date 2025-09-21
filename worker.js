@@ -631,7 +631,7 @@ const HTML_CONTENT = `
                 <i class="fab fa-github"></i> Github开源地址
             </a>
             <span class="divider">|</span>
-            <a href="https://ip-api.527188.workers.dev/api" target="_blank">
+            <a href="https://ip.527188.xyz/api" target="_blank">
                 <i class="fas fa-link"></i> 本站接口地址
             </a>
             <span class="divider">|</span>
